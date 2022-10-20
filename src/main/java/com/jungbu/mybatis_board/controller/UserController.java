@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.UserMapper;
+
+import lombok.Getter;
 @RequestMapping("/user")
 @Controller //Spring MVC 컨테이너에서 관리하는 servlet
 public class UserController {
@@ -43,8 +46,8 @@ public class UserController {
 		final int LOWS=10;
 		int starRow=(page-1)*LOWS;
 		List<UserDto> userList=null;
-		try {
-			Connection conn=dataSource.getConnection(); //null 오류 발생
+		try (Connection conn=dataSource.getConnection();){
+			 //null 오류 발생
 			PreparedStatement pstmt=conn.prepareStatement("Select * from user LIMIT ?,?");
 			pstmt.setInt(1, starRow);
 			pstmt.setInt(2, LOWS);
@@ -107,4 +110,49 @@ public class UserController {
 			return "redirect:/user/detail.do?userId="+user.getUserId();
 		}
 	}
+	@GetMapping("/delete.do")
+	public String delete(String userId) {
+		int delete=0;
+		try {
+			delete=userMapper.delete(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(delete>0) {
+			return "redirect:/user/list.do";
+		}else {
+			return "redirect:/user/detail.do?userId="+userId;
+		}
+	}
+	@GetMapping("/insert.do")
+	public void insert(){}
+	@PostMapping("insert.do")
+	public String insert(UserDto user) {
+		int insert=0;
+		try {
+			insert=userMapper.insert(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(insert>0) {
+			return "redirect:/user/list.do";
+		}else {
+			return "redirect:/user/insert.do";
+		}
+	}
+	//@ResponseBody 객체를 JSON으로 바꿔서 반환
+	@GetMapping("/checkUserId.do")
+	public @ResponseBody UserDto checkUserId() {
+		UserDto user=new UserDto();
+			
+		return user;		
+	}
 }
+
+
+
+
+
+
+
+
