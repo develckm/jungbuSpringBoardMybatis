@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<header th:include="/headerNav"></header>
+	<h1>Spring_board.user list</h1>
+	<table class="table table-striped">
+		<thead class="table-dark"> 
+			<tr>
+				<th>id</th><th>이름</th><th>이메일</th><th>폰</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			<tr th:each="user : ${userList}">
+				<td>
+					<a 
+					th:href="@{/user/detail.do(userId=${user.userId})}" 
+					th:text="${user.userId}"></a>
+				</td>
+				<td th:text="${user.name}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.phone}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

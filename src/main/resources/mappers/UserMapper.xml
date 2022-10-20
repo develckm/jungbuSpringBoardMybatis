@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.jungbu.mybatis_board.mapper.UserMapper">
+ 	<select id="list" resultType="com.jungbu.mybatis_board.dto.UserDto" >
+ 		SELECT *,user_id userId FROM USER 
+ 		ORDER BY signup DESC 
+ 		LIMIT #{start},#{rows}
+ 	</select>
+ 	<select id="detail" resultType="com.jungbu.mybatis_board.dto.UserDto" >
+ 		SELECT *,user_id userId from USER
+ 		WHERE user_id=#{userId}
+ 	</select>
+ 	<update id="update" parameterType="com.jungbu.mybatis_board.dto.UserDto">
+ 		UPDATE USER SET
+ 		name=#{name}, pw=#{pw}, email=#{email}, phone=#{phone}, birth=#{birth}, signup=#{signup}
+ 		WHERE user_id=#{userId}
+ 	</update>
+ 	<delete id="delete">
+ 		DELETE FROM USER WHERE user_id=#{userId}
+ 	</delete>
+ 	<insert id="insert" parameterType="com.jungbu.mybatis_board.dto.UserDto">
+ 		INSERT INTO USER 
+ 		(user_id, name, pw, email, phone, birth) 
+ 		VALUES 
+ 		(#{userId}, #{name}, #{pw}, #{email}, #{phone}, #{birth})
+ 	</insert>
+ 	
+ </mapper>
