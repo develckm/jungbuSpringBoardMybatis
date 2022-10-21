@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<header th:include="headerNav"></header>
+	<main class="container mt-5">
+		<h1 class="mt-3">Spring_board.board update form</h1>
+		<div>
+			<p>
+				<strong>no : </strong>
+				<span th:text="${board.boardNo}"></span>
+			</p>
+			<p>
+				<strong>글쓴이 : </strong>
+				<span th:text="${board.userId}"></span>
+			</p>
+			<p>
+				<strong>제목 : </strong>
+				<span th:text="${board.title}"></span>
+			</p>
+			<p>
+				<strong>게시일 : </strong>
+				<span th:text="${board.postTime}"></span>
+			</p>
+			<p>
+				<strong>조회수 : </strong>
+				<span th:text="${board.views}"></span>
+			</p>
+			<p>
+				<button class="rounded-pill btn btn-outline-danger">
+					<i class="bi bi-hand-thumbs-up"></i>
+					<th:block th:text="${board.likes}"></th:block>
+				</button>
+				
+				<button class="rounded-pill btn btn-outline-primary"> 
+					<i class="bi bi-hand-thumbs-down"></i>
+					<th:block th:text="${board.bads}"></th:block>
+				</button>
+				
+			</p>
+			<p>
+				<strong>내용 : </strong>
+				<span th:text="${board.contents}"></span>
+			</p>
+			
+		</div>
+		<div class="d-flex justify-content-end">
+			<button class="btn btn-outline-warning mx-2" type="reset">초기화</button>
+			<button class="btn btn-outline-primary">수정</button>
+		</div>
+	</main>
+</body>
+</html>

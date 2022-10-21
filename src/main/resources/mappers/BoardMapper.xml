@@ -3,7 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jungbu.mybatis_board.mapper.BoardMapper">
-	<select id="list" resultType="BoardDto">
+	<!-- dto 필드명과 db 칼럼명이 다를때 mapping 해준다.  -->
+	<resultMap type="BoardDto" id="BoardMap">
+		<id column="board_no" property="boardNo"/>
+		<result column="post_time" property="postTime"/>
+		<result column="user_id" property="userId"/>
+		<result column="title" property="title"/>
+		<result column="contents" property="contents"/>
+		<result column="views" property="views"/>
+		<result column="likes" property="likes"/>
+		<result column="bads" property="bads"/>
+	</resultMap>
+	
+	<select id="list" resultMap="BoardMap">
 		SELECT * FROM BOARD 
 			ORDER BY board_no DESC
 			LIMIT #{startRow},#{rows}
@@ -11,8 +23,11 @@
 	<select id="listCount" resultType="int">
 		SELECT COUNT(*) FROM BOARD
 	</select>
-	<select id="detail" resultType="BoardDto">
-		SELECT * FROM BOARD 
+	<select id="detail" resultMap="BoardMap">
+		SELECT *, 
+			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
+			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
+			FROM BOARD b
 			WHERE board_no=#{boardNo}
 	</select>
 	<insert id="insert" parameterType="BoardDto">
@@ -28,7 +43,7 @@
 			WHERE board_no=#{boardNo}	
 	</update>
 	<update id="viewUpdate" parameterType="int">
-		UDATE BOARD SET
+		UPDATE BOARD SET
 			views=views+1
 			WHERE board_no=#{boardNo}
 	</update>

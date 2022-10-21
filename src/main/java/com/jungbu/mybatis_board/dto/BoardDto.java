@@ -22,6 +22,9 @@ public class BoardDto {
 	private java.util.Date postTime;
 	private String userId;  
 	private int views;    
+	private int likes;//select count(*) from board_prefer weher prefer=1 AND board_no=no     
+	private int bads; //select count(*) from prefer weher prefer=0 AND board_no=no     
+
 }
 
 
