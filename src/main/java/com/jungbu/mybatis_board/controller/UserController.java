@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.spi.DirStateFactory.Result;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
@@ -190,7 +191,12 @@ public class UserController {
 			return "redirect:/user/login.do";			
 		}
 	}
-	
+	@GetMapping("/logout.do")
+	public String logout(HttpSession session) {
+		//session.invalidate();
+		session.removeAttribute("loginUser");
+		return "redirect:/";
+	}
 	
 }
 

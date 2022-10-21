@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jungbu.mybatis_board.mapper.BoardMapper">
+	<select id="list" resultType="BoardDto">
+		SELECT * FROM BOARD 
+			ORDER BY board_no DESC
+			LIMIT #{startRow},#{rows}
+	</select>
+	<select id="listCount" resultType="int">
+		SELECT COUNT(*) FROM BOARD
+	</select>
+	<select id="detail" resultType="BoardDto">
+		SELECT * FROM BOARD 
+			WHERE board_no=#{boardNo}
+	</select>
+	<insert id="insert" parameterType="BoardDto">
+		INSERT INTO BOARD
+			(title,contents,user_id)
+			VALUES
+			(#{title},#{contents},#{userId})
+	</insert>
+	<update id="update" parameterType="BoardDto">
+		UPDATE BOARD SET
+			title=#{title},
+			contents=#{contents}
+			WHERE board_no=#{boardNo}	
+	</update>
+	<update id="viewUpdate" parameterType="int">
+		UDATE BOARD SET
+			views=views+1
+			WHERE board_no=#{boardNo}
+	</update>
+	<delete id="delete">
+		DELETE FROM BOARD 
+			WHERE board_no=#{boardNo}
+	</delete>
+	
+</mapper>
