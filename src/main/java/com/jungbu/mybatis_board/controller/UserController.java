@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.spi.DirStateFactory.Result;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.UserMapper;
 
 import lombok.Getter;
+import lombok.Setter;
 @RequestMapping("/user")
 @Controller //Spring MVC 컨테이너에서 관리하는 servlet
 public class UserController {
@@ -140,13 +142,56 @@ public class UserController {
 			return "redirect:/user/insert.do";
 		}
 	}
-	//@ResponseBody 객체를 JSON으로 바꿔서 반환
-	@GetMapping("/checkUserId.do")
-	public @ResponseBody UserDto checkUserId() {
-		UserDto user=new UserDto();
-			
-		return user;		
+	@Getter@Setter
+	class CheckUser{
+		private int check;//0:없음(default),1:존재함,-1:통신오류
+		private UserDto user;
 	}
+	//@ResponseBody DTO 객체를 JSON으로 바꿔서 반환 (캡슐화된 필드만)
+	@GetMapping("/checkUserId.do")
+	public @ResponseBody CheckUser checkUserId(
+			@RequestParam(required = true) String userId
+			) {
+		CheckUser checkUser=new CheckUser();
+		UserDto user=null;
+		try {
+			user=userMapper.detail(userId);
+			if(user!=null) {
+				checkUser.setCheck(1);
+				checkUser.setUser(user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			checkUser.setCheck(-1);
+		}
+			
+		return checkUser;		
+	}
+	@GetMapping("/login.do")
+	public void login() {}
+	@PostMapping("/login.do")
+	public String login(
+			@RequestParam(required=true) String userId, 
+			@RequestParam(required=true) String pw,
+			HttpSession session
+			) {
+		UserDto loginUser=null;
+		try {
+			loginUser=userMapper.login(userId, pw);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(loginUser);
+		if(loginUser!=null) {
+			session.setAttribute("loginUser", loginUser);
+			return "redirect:/";
+
+		}else {
+			return "redirect:/user/login.do";			
+		}
+	}
+	
+	
 }
 
 

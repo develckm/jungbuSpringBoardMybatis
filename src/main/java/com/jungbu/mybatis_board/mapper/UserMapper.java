@@ -14,6 +14,7 @@ public interface UserMapper {
 	List<UserDto> list(@Param(value = "start")int startRow,int rows);
 	UserDto detail(String userId);
 	//select 가 1개만 반환할때 resultType으로 반환값 작성 가능
+	UserDto login(String userId,String pw);
 	int update(UserDto user);
 	int insert(UserDto user);
 	int delete(String userId);
