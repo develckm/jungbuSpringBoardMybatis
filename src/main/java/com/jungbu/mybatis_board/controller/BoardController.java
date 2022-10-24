@@ -41,11 +41,15 @@ public class BoardController {
 	@GetMapping("/detail.do")
 	public String detail(
 			@RequestParam(required=true)int boardNo,
-			Model model
+			Model model,
+			@RequestParam(defaultValue="1") int page
 			){
 		BoardDto board=null;
+		final int ROWS=2;
+		int startRow=(page-1)*ROWS;
 		try {
-			board=boardMapper.detail(boardNo);
+			board=boardMapper.detailReplyPaging(boardNo,startRow,ROWS);
+			System.out.println(board);
 			boardMapper.viewUpdate(boardNo);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="list-group">
+	<th:block th:each="reply:${replyList}">
+  	<a href="#" class="list-group-item list-group-item-action py-3" aria-current="true">
+	    <div class="d-flex w-100 justify-content-between">
+	      <h5 class="mb-1" th:text="${reply.title}"></h5>
+	      <small th:text="${#dates.format(reply.postTime,'HH:mm:ss yyyy-MM-dd')}"></small>
+	    </div>
+	    <p class="mb-1">
+		    글쓴이:<span th:text="${reply.userId}"></span>
+			<button class="rounded-pill btn btn-outline-danger btn-sm">
+				<i class="bi bi-hand-thumbs-up"></i>
+				<th:block th:text="${reply.likes}"></th:block>
+			</button>
+			<button class="rounded-pill btn btn-outline-primary btn-sm"> 
+				<i class="bi bi-hand-thumbs-down"></i>
+				<th:block th:text="${reply.bads}"></th:block>
+			</button>
+	    </p>
+	    <p class="mb-1" th:text="${reply.contents}"></p>
+ 	</a>
+	 </th:block>
+ 	<nav class="my-5">
+	  <ul class="pagination justify-content-center">
+	    <li class="page-item disabled">
+	      <a class="page-link">Previous</a>
+	    </li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=1,boardNo=${boardNo})}">1</a></li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=2,boardNo=${boardNo})}">2</a></li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=3,boardNo=${boardNo})}">3</a></li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=4,boardNo=${boardNo})}">4</a></li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=5,boardNo=${boardNo})}">5</a></li>
+	    <li class="page-item"><a class="page-link" th:href="@{''(page=6,boardNo=${boardNo})}">6</a></li>
+	    <li class="page-item">
+	      <a class="page-link" href="#">Next</a>
+	    </li>
+	  </ul>
+	</nav>
+ 
+	 
+	 
+</div>

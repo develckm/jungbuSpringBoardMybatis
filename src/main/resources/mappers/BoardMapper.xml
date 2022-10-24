@@ -13,6 +13,17 @@
 		<result column="views" property="views"/>
 		<result column="likes" property="likes"/>
 		<result column="bads" property="bads"/>
+		<collection property="replyList" ofType="ReplyDto">
+			<id column="reply_no" property="replyNo"/>
+			<result column="r_title" property="title"/>
+			<result column="r_contents" property="contents"/>
+			<result column="r_user_id" property="userId"/>
+			<result column="r_post_time" property="postTime"/>
+			<result column="r_img_path" property="imgPath"/>
+			<result column="r_likes" property="likes"/>
+			<result column="r_bads" property="bads"/>
+		</collection>
+		
 	</resultMap>
 	
 	<select id="list" resultMap="BoardMap">
@@ -24,12 +35,33 @@
 		SELECT COUNT(*) FROM BOARD
 	</select>
 	<select id="detail" resultMap="BoardMap">
-		SELECT *, 
+		SELECT b.*,			
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
-			FROM BOARD b
+			FROM BOARD b 
+			LEFT JOIN REPLY r USING(board_no) 
 			WHERE board_no=#{boardNo}
 	</select>
+	<select id="detailReplyPaging" resultMap="BoardMap">
+		SELECT b.*,
+			r.reply_no,
+			r.title r_title,
+			r.contents r_contents,
+			r.post_time r_post_time,
+			r.user_id r_user_id,
+			r.img_path r_img_path,
+			(SELECT COUNT(*) FROM REPLY_PREFER rf WHERE rf.reply_no=r.reply_no AND prefer=1) r_likes,
+			(SELECT COUNT(*) FROM REPLY_PREFER rf WHERE rf.reply_no=r.reply_no AND prefer=0) r_bads,
+			
+			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
+			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
+			FROM BOARD b 
+			LEFT JOIN REPLY r USING(board_no) 
+			WHERE board_no=#{boardNo}
+			LIMIT #{startRow},#{rows}
+	</select>
+	
+	
 	<!--  useGeneratedKeys="true" keyProperty="boardNo" : 파라미터로 넘어온 boardDto에 boardNo가 넘어온다. -->
 	<insert id="insert" parameterType="BoardDto" 
 	 useGeneratedKeys="true" keyProperty="boardNo">
