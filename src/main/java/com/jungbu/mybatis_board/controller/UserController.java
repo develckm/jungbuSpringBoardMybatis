@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jungbu.mybatis_board.dto.UserDto;
@@ -169,12 +170,19 @@ public class UserController {
 		return checkUser;		
 	}
 	@GetMapping("/login.do")
-	public void login() {}
+	public void login(
+			HttpServletRequest req,
+			HttpSession session
+			) {
+			String refererPage=req.getHeader("Referer");//로그인 폼 오기 전 페이지
+			session.setAttribute("redirectPage", refererPage);
+	}
 	@PostMapping("/login.do")
 	public String login(
 			@RequestParam(required=true) String userId, 
 			@RequestParam(required=true) String pw,
-			HttpSession session
+			HttpSession session,
+			@SessionAttribute(required = false) String redirectPage
 			) {
 		UserDto loginUser=null;
 		try {
@@ -185,8 +193,11 @@ public class UserController {
 		System.out.println(loginUser);
 		if(loginUser!=null) {
 			session.setAttribute("loginUser", loginUser);
-			return "redirect:/";
-
+			if(redirectPage==null) {
+				return "redirect:/";				
+			}else {
+				return "redirect:"+redirectPage;				
+			}
 		}else {
 			return "redirect:/user/login.do";			
 		}

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -78,6 +79,38 @@ public class BoardController {
 			msg=(loginUser==null)?"로그인하셔야 이용할 수 있습니다.":"글쓴이만 수정 가능 합니다.";
 			session.setAttribute("msg", msg);
 			return "redirect:/board/detail.do?boardNo="+boardNo;
+		}
+	}
+	@PostMapping("/update.do")
+	public String update(
+			BoardDto board,
+			@SessionAttribute(required = false) UserDto loginUser,
+			HttpSession session
+			) {
+		int update=0;
+		String msg="";
+		try {
+			if(loginUser==null) {
+				msg="로그인 하셔야 합니다.";
+			}else {
+				if(board.getUserId().equals(loginUser.getUserId())) {
+					update=boardMapper.update(board);					
+				}else {
+					msg="글쓴이만 수정 가능 합니다.";
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(update>0) {
+			msg="수정 성공";
+			session.setAttribute("msg", msg);
+			return "redirect:/board/detail.do?boardNo="+board.getBoardNo();			
+		}else {
+			msg="수정 실패(db 오류)";
+			session.setAttribute("msg", msg);
+			return "redirect:/board/update.do?boardNo="+board.getBoardNo();			
 		}
 	}
 }

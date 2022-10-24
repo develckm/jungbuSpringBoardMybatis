@@ -43,11 +43,11 @@
   </div>
 </nav>
 <th:block th:if="${session.msg!=null}">
-<script th:inline="javascript">
-let msg=/*[[${session.msg}]]*/+"";
-alert(msg);
-/*[[${#session.removeAttribute('msg')}]]*/
-</script>
+	<script th:inline="javascript">
+		let msg=/*[[${session.msg}]]*/+"";
+		alert(msg);
+		/*[[${#session.removeAttribute('msg')}]]*/
+	</script>
 </th:block>	
 	
 	
