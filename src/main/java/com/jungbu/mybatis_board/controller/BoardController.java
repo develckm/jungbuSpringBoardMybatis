@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.fasterxml.jackson.core.io.UTF32Reader;
 import com.jungbu.mybatis_board.dto.BoardDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.BoardMapper;
@@ -111,6 +112,81 @@ public class BoardController {
 			msg="수정 실패(db 오류)";
 			session.setAttribute("msg", msg);
 			return "redirect:/board/update.do?boardNo="+board.getBoardNo();			
+		}
+	}
+	@GetMapping("/delete.do")
+	public String delete(
+			@RequestParam(required = true) int boardNo,
+			@SessionAttribute(required = false) UserDto loginUser,
+			HttpSession session
+			) {
+		int delete=0;
+		String msg="";
+		try {
+			if(loginUser!=null) {
+				BoardDto board=boardMapper.detail(boardNo);
+				if(board.getUserId().equals(loginUser.getUserId())) {
+					delete=boardMapper.delete(boardNo);
+				}else {
+					msg="글쓴이만 삭제 가능";
+				}
+			}else {
+				msg="로그인해야 게시글 삭제 가능";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(delete>0) {
+			msg="삭제 성공";
+			session.setAttribute("msg", msg);
+			return "redirect:/board/list.do";			
+		}else {
+			msg="삭제 실패(db 오류)";
+			session.setAttribute("msg", msg);
+			return "redirect:/board/update.do?boardNo="+boardNo;			
+		}
+	}
+	@GetMapping("/insert.do")
+	public String insert(
+			@SessionAttribute(required = false) UserDto loginUser,
+			HttpSession session
+			) {
+		String msg="";
+		if(loginUser!=null) {
+			return "/board/insert";
+		}else {
+			msg="로그인하셔야 게시글을 작성할 수 있습니다.";
+			session.setAttribute("msg", msg);
+			return "redirect:/user/login.do";
+		}
+	}
+	@PostMapping("/insert.do")
+	public String insert(
+			BoardDto board,
+			@SessionAttribute(required = false) UserDto loginUser,
+			HttpSession session
+			) {
+		int insert=0;
+		String msg="";
+		try {
+			if(loginUser!=null) {
+				insert=boardMapper.insert(board);				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(insert>0) {
+			msg="게시글 작성 성공";
+			session.setAttribute("msg", msg);
+			return "redirect:/board/detail.do?boardNo="+board.getBoardNo();			
+		}else {
+			if(loginUser==null) {
+				msg="로그인 한 유저만 게시글 작성 가능합니다.";
+			}else {
+				msg="게시글 작성 실패(db 오류)";
+			}
+			session.setAttribute("msg", msg);
+			return "redirect:/board/insert.do";
 		}
 	}
 }

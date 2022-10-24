@@ -50,8 +50,10 @@
 				<label for="boardContents">내용 : </label>
 			</p>
 			<div class="d-flex justify-content-end">
-				<button class="btn btn-outline-warning mx-2" type="reset">초기화</button>
-				<button class="btn btn-outline-primary">수정</button>
+				<button class="btn btn-outline-warning me-2" type="reset">초기화</button>
+				<button class="btn btn-outline-primary me-2">수정</button>
+				<a class="btn btn-outline-danger" 
+				th:href="@{/board/delete.do(boardNo=${board.boardNo})}">삭제</a>
 			</div>
 		</form>
 	</main>

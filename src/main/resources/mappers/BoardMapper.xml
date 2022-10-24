@@ -30,11 +30,16 @@
 			FROM BOARD b
 			WHERE board_no=#{boardNo}
 	</select>
-	<insert id="insert" parameterType="BoardDto">
+	<!--  useGeneratedKeys="true" keyProperty="boardNo" : 파라미터로 넘어온 boardDto에 boardNo가 넘어온다. -->
+	<insert id="insert" parameterType="BoardDto" 
+	 useGeneratedKeys="true" keyProperty="boardNo">
 		INSERT INTO BOARD
 			(title,contents,user_id)
 			VALUES
 			(#{title},#{contents},#{userId})
+		<!-- <selectKey>
+			SELECT LAST_INSERT_ID()
+		</selectKey> -->
 	</insert>
 	<update id="update" parameterType="BoardDto">
 		UPDATE BOARD SET
