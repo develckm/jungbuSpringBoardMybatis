@@ -2,28 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="list-group">
 	<th:block th:each="reply:${replyList}">
-  	<a href="#" class="list-group-item list-group-item-action py-3" aria-current="true">
+  	<div class="list-group-item list-group-item-action py-3" aria-current="true">
 	    <div class="d-flex w-100 justify-content-between">
 	      <h5 class="mb-1" th:text="${reply.title}"></h5>
 	      <small th:text="${#dates.format(reply.postTime,'HH:mm:ss yyyy-MM-dd')}"></small>
 	    </div>
-	    <p class="mb-1">
-		    글쓴이:<span th:text="${reply.userId}"></span>
-			<button class="rounded-pill btn btn-outline-danger btn-sm">
-				<i class="bi bi-hand-thumbs-up"></i>
-				<th:block th:text="${reply.likes}"></th:block>
-			</button>
-			<button class="rounded-pill btn btn-outline-primary btn-sm"> 
-				<i class="bi bi-hand-thumbs-down"></i>
-				<th:block th:text="${reply.bads}"></th:block>
-			</button>
-	    </p>
+	    <div class="mb-1 d-flex justify-content-between align-items-center">
+		    <span th:text="${reply.userId}"></span>
+		    <div>
+				<button class="rounded-pill btn btn-outline-danger btn-sm">
+					<i class="bi bi-hand-thumbs-up"></i>
+					<th:block th:text="${reply.likes}"></th:block>
+				</button>
+				<button class="rounded-pill btn btn-outline-primary btn-sm"> 
+					<i class="bi bi-hand-thumbs-down"></i>
+					<th:block th:text="${reply.bads}"></th:block>
+				</button>
+			</div>
+			<a th:href="@{/reply/update.do(replyNo=${reply.replyNo})}">수정하기</a>
+	    </div>
 	    <div class="mb-1 row" >
 	    	<img th:if="${reply.imgPath!=null}" class="col-2" alt=""
 	    	 th:src="@{/img/{file}(file=${reply.imgPath})}">
 	    	<span  class="col-10"  th:text="${reply.contents}"></span>
 	    </div>
- 	</a>
+ 	</div>
 	 </th:block>
  	<nav class="my-5">
 	  <ul class="pagination justify-content-center">
