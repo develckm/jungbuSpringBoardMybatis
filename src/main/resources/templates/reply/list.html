@@ -18,7 +18,11 @@
 				<th:block th:text="${reply.bads}"></th:block>
 			</button>
 	    </p>
-	    <p class="mb-1" th:text="${reply.contents}"></p>
+	    <div class="mb-1 row" >
+	    	<img th:if="${reply.imgPath!=null}" class="col-2" alt=""
+	    	 th:src="@{/img/{file}(file=${reply.imgPath})}">
+	    	<span  class="col-10"  th:text="${reply.contents}"></span>
+	    </div>
  	</a>
 	 </th:block>
  	<nav class="my-5">

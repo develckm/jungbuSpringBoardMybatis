@@ -58,6 +58,7 @@
 			FROM BOARD b 
 			LEFT JOIN REPLY r USING(board_no) 
 			WHERE board_no=#{boardNo}
+			ORDER BY r.reply_no DESC
 			LIMIT #{startRow},#{rows}
 	</select>
 	
