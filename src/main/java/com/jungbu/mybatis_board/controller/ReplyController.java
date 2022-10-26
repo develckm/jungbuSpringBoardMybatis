@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,15 +13,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jungbu.mybatis_board.dto.ReplyDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.ReplyMapper;
+
+import lombok.Data;
 
 @RequestMapping("/reply")
 @Controller
@@ -29,30 +34,41 @@ public class ReplyController {
 	String imgPath;
 	@Autowired
 	ReplyMapper replyMapper;
+	@Data
+	class CheckStatus{
+		private int status;//{status : 0:등록실패,1:성공,-1:로그인하세요}
+	}
+	
 	@PostMapping("/insert.do")
-	public String insert(
+	public @ResponseBody CheckStatus insert(
 			ReplyDto reply,
 			MultipartFile img,
-			@SessionAttribute UserDto loginUser
+			@SessionAttribute(required=false) UserDto loginUser
 			) {
-		reply.setUserId(loginUser.getUserId());
-		int insert=0;
-		try {
-			if(img!=null&&!img.isEmpty()) {
-				String contentTypes[]=img.getContentType().split("/"); // image/jpeg, application/json
-				if(contentTypes[0].equals("image")) {
-					String fileName="reply_"+System.currentTimeMillis()+"_"+((int)(Math.random()*10000))+"."+contentTypes[1];
-					Path path=Paths.get(imgPath+"/"+fileName);
-					img.transferTo(path);	
-					reply.setImgPath(fileName);					
+		CheckStatus checkStatus=new CheckStatus();
+		if(loginUser!=null) {
+			reply.setUserId(loginUser.getUserId());
+			int insert=0;
+			try {
+				if(img!=null&&!img.isEmpty()) {
+					String contentTypes[]=img.getContentType().split("/"); // image/jpeg, application/json
+					if(contentTypes[0].equals("image")) {
+						String fileName="reply_"+System.currentTimeMillis()+"_"+((int)(Math.random()*10000))+"."+contentTypes[1];
+						Path path=Paths.get(imgPath+"/"+fileName);
+						img.transferTo(path);	
+						reply.setImgPath(fileName);					
+					}
 				}
+				insert=replyMapper.insert(reply);
+				System.out.println(insert);
+			}catch(Exception e) {
+				e.printStackTrace();
 			}
-			insert=replyMapper.insert(reply);
-			System.out.println(insert);
-		}catch(Exception e) {
-			e.printStackTrace();
+			checkStatus.setStatus(insert); //0 or 1
+		}else {
+			checkStatus.setStatus(-1);
 		}
-		return "redirect:/board/detail.do?boardNo="+reply.getBoardNo();
+		return checkStatus;
 	}
 	@GetMapping("/update.do")
 	public void update(
@@ -122,8 +138,26 @@ public class ReplyController {
 		String msg=(update>0)?"수정 성공":"수정 실패";
 		session.setAttribute("msg", msg);
 		return "redirect:/board/detail.do?boardNo="+reply.getBoardNo();
-
 	}
+	@GetMapping("/{boardNo}/list.do")
+	public String list(
+			@RequestParam(defaultValue="1") int page,
+			@PathVariable int boardNo,
+			Model model
+			) {
+		List<ReplyDto> replyList=null;
+		int ROWS=5;
+		int startRow=(page-1)*ROWS;
+		
+		replyList=replyMapper.list(boardNo,startRow, ROWS);
+		model.addAttribute("replyList",replyList);
+		return "/reply/list";
+	}
+	
+	
+	
+	
+	
 }
 
 

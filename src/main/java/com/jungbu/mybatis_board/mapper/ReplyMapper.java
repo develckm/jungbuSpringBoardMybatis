@@ -8,7 +8,7 @@ import com.jungbu.mybatis_board.dto.ReplyDto;
 
 @Mapper
 public interface ReplyMapper {
-	List<ReplyDto> list(int startRow,int rows);
+	List<ReplyDto> list(int boardNo,int startRow,int rows);
 	ReplyDto detail(int replyNo);
 	int insert(ReplyDto reply);
 	int update(ReplyDto reply);

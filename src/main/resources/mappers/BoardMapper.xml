@@ -28,6 +28,7 @@
 	
 	<select id="list" resultMap="BoardMap">
 		SELECT * FROM BOARD 
+			LEFT JOIN REPLY USING(board_no)
 			ORDER BY board_no DESC
 			LIMIT #{startRow},#{rows}
 	</select>
