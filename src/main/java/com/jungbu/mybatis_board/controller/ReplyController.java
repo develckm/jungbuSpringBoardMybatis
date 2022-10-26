@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.ReplyDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.ReplyMapper;
@@ -164,12 +167,14 @@ public class ReplyController {
 			@PathVariable int boardNo,
 			Model model
 			) {
-		List<ReplyDto> replyList=null;
+		Page<ReplyDto> replyList=null;
 		int ROWS=5;
-		int startRow=(page-1)*ROWS;
+		PageHelper.startPage(page, ROWS);
+		replyList=replyMapper.list(boardNo);
 		
-		replyList=replyMapper.list(boardNo,startRow, ROWS);
 		model.addAttribute("replyList",replyList);
+		model.addAttribute("paging",PageInfo.of(replyList,5));
+
 		return "/reply/list";
 	}
 	

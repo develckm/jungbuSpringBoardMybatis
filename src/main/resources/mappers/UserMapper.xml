@@ -6,7 +6,6 @@
  	<select id="list" resultType="com.jungbu.mybatis_board.dto.UserDto" >
  		SELECT *,user_id userId FROM USER 
  		ORDER BY signup DESC 
- 		LIMIT #{start},#{rows}
  	</select>
  	<select id="detail" resultType="com.jungbu.mybatis_board.dto.UserDto" >
  		SELECT *,user_id userId from USER

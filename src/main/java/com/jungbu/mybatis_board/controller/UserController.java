@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.UserMapper;
 
@@ -73,7 +76,7 @@ public class UserController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return "/user/list"; 
+		return "/user/jdbcList"; 
 		//req.getRequestDispatcher("WEB-INF/template/user/list.html").forward(req,resp); 
 	}
 	@GetMapping("/list2.do")
@@ -82,9 +85,11 @@ public class UserController {
 			@RequestParam(defaultValue="1") int page
 			) {
 		final int ROWS=10;
-		int startRow=(page-1)*ROWS;
-		List<UserDto> userList=userMapper.list(startRow,ROWS);
+		PageHelper.startPage(page,ROWS);
+		Page<UserDto> userList=userMapper.list();
 		model.addAttribute("userList", userList);
+		model.addAttribute("paging", PageInfo.of(userList,5));
+
 		return "/user/list";
 	}
 //	@GetMapping("/detail.do")

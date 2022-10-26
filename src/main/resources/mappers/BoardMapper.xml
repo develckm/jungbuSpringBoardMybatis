@@ -13,7 +13,7 @@
 		<result column="views" property="views"/>
 		<result column="likes" property="likes"/>
 		<result column="bads" property="bads"/>
-		<collection property="replyList" ofType="ReplyDto">
+		<collection property="replyList" ofType="ReplyDto" javaType="java.util.ArrayList">
 			<id column="reply_no" property="replyNo"/>
 			<result column="r_title" property="title"/>
 			<result column="r_contents" property="contents"/>
@@ -29,7 +29,7 @@
 	<select id="list" resultMap="BoardMap">
 		SELECT * FROM BOARD 
 			ORDER BY board_no DESC
-			LIMIT #{startRow},#{rows}
+			
 	</select>
 	<select id="listCount" resultType="int">
 		SELECT COUNT(*) FROM BOARD
@@ -39,7 +39,6 @@
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
 			FROM BOARD b 
-			LEFT JOIN REPLY r USING(board_no) 
 			WHERE board_no=#{boardNo}
 	</select>
 	<select id="detailReplyPaging" resultMap="BoardMap">

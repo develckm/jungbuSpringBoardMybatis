@@ -3,6 +3,8 @@ package com.jungbu.mybatis_board.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.Page;
+
 import lombok.Data;
 /*
 +-----------+--------------+------+-----+-------------------+-------------------+

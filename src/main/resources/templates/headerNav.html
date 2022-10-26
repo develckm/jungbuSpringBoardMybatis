@@ -18,7 +18,7 @@
           <a th:classappend="${(#strings.equals(uri,'/user/list2.do'))?'active':''}" class="nav-link" href="/user/list2.do">유저리스트(Mybatis)</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/board/list.do">게시글리스트</a>
+          <a th:classappend="${(#strings.equals(uri,'/board/list.do'))?'active':''}" class="nav-link" href="/board/list.do">게시글리스트</a>
         </li>
       </ul>      
 	  <ul class="navbar-nav" >

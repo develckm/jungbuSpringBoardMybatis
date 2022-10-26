@@ -36,6 +36,5 @@
 		SELECT * FROM REPLY
 			WHERE board_no=#{boardNo}
 			ORDER BY reply_no DESC
-			LIMIT #{startRow},#{rows}
 	</select>
 </mapper>

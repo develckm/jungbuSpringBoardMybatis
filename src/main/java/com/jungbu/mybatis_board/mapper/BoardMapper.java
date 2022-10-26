@@ -10,7 +10,7 @@ import com.jungbu.mybatis_board.dto.BoardDto;
 @Mapper
 public interface BoardMapper {
 	
-	List<BoardDto> list(int startRow,int rows);
+	Page<BoardDto> list();
 	int listCount();
 	BoardDto detail(int boardNo);
 	BoardDto detailReplyPaging(int boardNo, int startRow, int rows);

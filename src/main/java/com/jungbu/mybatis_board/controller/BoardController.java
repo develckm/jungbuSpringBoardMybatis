@@ -14,28 +14,39 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fasterxml.jackson.core.io.UTF32Reader;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.BoardDto;
+import com.jungbu.mybatis_board.dto.ReplyDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.BoardMapper;
+import com.jungbu.mybatis_board.mapper.ReplyMapper;
 @RequestMapping("/board")
 @Controller
 public class BoardController {
 	@Autowired
 	BoardMapper boardMapper;
+	@Autowired
+	ReplyMapper replyMapper;
+
 	@GetMapping("/list.do")
 	public String list(
 			Model model,
 			@RequestParam(defaultValue="1")int page
 			) {
 		final int ROWS=10;
-		int starRow=(page-1)*ROWS;
-		List<BoardDto> boardList=null;
+		//int starRow=(page-1)*ROWS;
+		PageHelper.startPage(page,ROWS);
+		Page<BoardDto> boardList=null;
 		try {
-			boardList=boardMapper.list(starRow, ROWS);			
+			boardList=boardMapper.list();			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		model.addAttribute("boardList", boardList);
+
+		model.addAttribute("paging", PageInfo.of(boardList,5));
 		return "/board/list";
 	}
 	@GetMapping("/detail.do")
@@ -45,17 +56,22 @@ public class BoardController {
 			@RequestParam(defaultValue="1") int page
 			){
 		BoardDto board=null;
+		Page<ReplyDto> replyList=null;
 		final int ROWS=5;
-		int startRow=(page-1)*ROWS;
 		try {
-			board=boardMapper.detailReplyPaging(boardNo,startRow,ROWS);
-			System.out.println(board);
+			PageHelper.startPage(page,ROWS);
+			board=boardMapper.detail(boardNo);
+			PageHelper.startPage(page,ROWS);
+			replyList=replyMapper.list(boardNo);
+			board.setReplyList(replyList);
 			boardMapper.viewUpdate(boardNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(board!=null) {			
 			model.addAttribute("board", board);
+			model.addAttribute("paging", PageInfo.of(replyList,5));
+
 			return "/board/detail";
 		}else {
 			return "redirect:/board/list.do";
