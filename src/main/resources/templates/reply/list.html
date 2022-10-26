@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="list-group">
 	<th:block th:each="reply:${replyList}">
-  	<div class="list-group-item list-group-item-action py-3" aria-current="true">
+  	<div th:id="'replyLi'+${reply.replyNo}" class="list-group-item list-group-item-action py-3" aria-current="true">
 	    <div class="d-flex w-100 justify-content-between">
 	      <h5 class="mb-1" th:text="${reply.title}"></h5>
 	      <small th:text="${#dates.format(reply.postTime,'HH:mm:ss yyyy-MM-dd')}"></small>
 	    </div>
 	    <div class="mb-1 d-flex justify-content-between align-items-center">
-		    <span th:text="${reply.userId}"></span>
 		    <div>
+			    <span class="me-2" th:text="${reply.userId}"></span>
 				<button class="rounded-pill btn btn-outline-danger btn-sm">
 					<i class="bi bi-hand-thumbs-up"></i>
 					<th:block th:text="${reply.likes}"></th:block>
@@ -19,7 +19,10 @@
 					<th:block th:text="${reply.bads}"></th:block>
 				</button>
 			</div>
-			<a th:href="@{/reply/update.do(replyNo=${reply.replyNo})}">수정하기</a>
+			<button th:onclick="readReplyUpdateForm([[${reply.replyNo}]])"
+				class="btn btn-outline-secondary btn-sm" type="button">
+				수정하기
+			</button>
 	    </div>
 	    <div class="mb-1 row" >
 	    	<img th:if="${reply.imgPath!=null}" class="col-2" alt=""
@@ -33,12 +36,30 @@
 	    <li class="page-item disabled">
 	      <a class="page-link">Previous</a>
 	    </li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=1,boardNo=${boardNo})}">1</a></li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=2,boardNo=${boardNo})}">2</a></li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=3,boardNo=${boardNo})}">3</a></li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=4,boardNo=${boardNo})}">4</a></li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=5,boardNo=${boardNo})}">5</a></li>
-	    <li class="page-item"><a class="page-link" th:href="@{''(page=6,boardNo=${boardNo})}">6</a></li>
+	    <li class="page-item">
+	    	<a class="page-link" href="javascript:void(0)" 
+	    	th:onclick="readReplyList([[${boardNo}]],1)">
+	    		1
+	    	</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" href="javascript:void(0)" 
+	    	th:onclick="readReplyList([[${boardNo}]],2)">
+	    		2
+	    	</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" href="javascript:void(0)" 
+	    	th:onclick="readReplyList([[${boardNo}]],3)">
+	    		3
+	    	</a>
+	    </li>
+	    <li class="page-item">
+	    	<a class="page-link" href="javascript:void(0)" 
+	    	th:onclick="readReplyList([[${boardNo}]],4)">
+	    		4
+	    	</a>
+	    </li>
 	    <li class="page-item">
 	      <a class="page-link" href="#">Next</a>
 	    </li>

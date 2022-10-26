@@ -45,7 +45,7 @@ public class BoardController {
 			@RequestParam(defaultValue="1") int page
 			){
 		BoardDto board=null;
-		final int ROWS=10;
+		final int ROWS=5;
 		int startRow=(page-1)*ROWS;
 		try {
 			board=boardMapper.detailReplyPaging(boardNo,startRow,ROWS);

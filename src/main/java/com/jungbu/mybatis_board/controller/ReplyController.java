@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ public class ReplyController {
 	class CheckStatus{
 		private int status;//{status : 0:등록실패,1:성공,-1:로그인하세요}
 	}
-	
 	@PostMapping("/insert.do")
 	public @ResponseBody CheckStatus insert(
 			ReplyDto reply,
@@ -71,16 +71,23 @@ public class ReplyController {
 		return checkStatus;
 	}
 	@GetMapping("/update.do")
-	public void update(
+	public String update(
+			@SessionAttribute UserDto loginUser, //status:400
 			@RequestParam(required=true) int replyNo,
-			Model model) {
+			Model model,
+			HttpServletResponse resp
+			) {
 		ReplyDto reply=null;
-		try {
-			reply=replyMapper.detail(replyNo);
-		} catch (Exception e) {
-			e.printStackTrace();
+		reply=replyMapper.detail(replyNo);//status: 500
+		
+		if(loginUser.getUserId().equals(reply.getUserId())) {
+			System.out.println(reply);
+			model.addAttribute("reply", reply);		
+			return "/reply/update"; //status:200
+		}else {
+			resp.setStatus(401);//Unauthorized
+			return null;
 		}
-		model.addAttribute("reply", reply);
 	}	
 	
 	

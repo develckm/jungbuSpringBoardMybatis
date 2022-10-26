@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<header th:include="/headerNav"></header>
-	<form class="bg-light px-3 py-2" action="/reply/update.do" method="post" enctype="multipart/form-data">
-		<h3>댓글 수정 (<span th:text="${reply.userId}"></span>)</h3>
+	<form  action="/reply/update.do" method="post" enctype="multipart/form-data">
+		<h5>댓글 수정 (<span th:text="${reply.userId}"></span>)</h5>
 		<input type="hidden" name="boardNo" th:value="${reply.boardNo}"> 
 		<input type="hidden" name="replyNo" th:value="${reply.replyNo}"> 
 		<input type="hidden" name="imgPath" th:value="${reply.imgPath}"> 

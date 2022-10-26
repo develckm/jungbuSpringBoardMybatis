@@ -60,28 +60,28 @@
 			 	토글
 			</a>
 		</h2>
+		<form name="replyInserForm" 
+		th:if="${session.loginUser!=null}"
+		class="bg-light px-3 py-2" action="/reply/insert.do" method="post" enctype="multipart/form-data">
+			<h3>댓글 작성 (<span th:text="${session.loginUser.userId}"></span>)</h3>
+			<input type="hidden" name="boardNo" th:value="${board.boardNo}"> 
+			<p class="input-group">
+				<label class="input-group-text" for="replyTitle">제목</label>
+				<input class="form-control" type="text" name="title" id="replyTitle" placeholder="길이가 255 이하로 작성">
+			</p>
+			<p class="input-group">
+				<label class="input-group-text" for="replyImg">이미지</label>
+				<input type="file" name="img" class="form-control" id="replyImg">
+			</p>
+			<p class="form-floating">
+				<textarea class="form-control" name="contents" id="replyContents" placeholder="내용"></textarea>
+				<label for="replyContents">내용</label>
+			</p>
+			<div class="input-group">
+				<button class="btn btn-outline-primary">등록</button>
+			</div>
+		</form>
 		<section id="replyList" class="mt-3 collapse show">
-			<form name="replyInserForm" 
-			th:if="${session.loginUser!=null}"
-			class="bg-light px-3 py-2" action="/reply/insert.do" method="post" enctype="multipart/form-data">
-				<h3>댓글 작성 (<span th:text="${session.loginUser.userId}"></span>)</h3>
-				<input type="hidden" name="boardNo" th:value="${board.boardNo}"> 
-				<p class="input-group">
-					<label class="input-group-text" for="replyTitle">제목</label>
-					<input class="form-control" type="text" name="title" id="replyTitle" placeholder="길이가 255 이하로 작성">
-				</p>
-				<p class="input-group">
-					<label class="input-group-text" for="replyImg">이미지</label>
-					<input type="file" name="img" class="form-control" id="replyImg">
-				</p>
-				<p class="form-floating">
-					<textarea class="form-control" name="contents" id="replyContents" placeholder="내용"></textarea>
-					<label for="replyContents">내용</label>
-				</p>
-				<div class="input-group">
-					<button class="btn btn-outline-primary">등록</button>
-				</div>
-			</form>
 			<th:block th:include="/reply/list" th:with="replyList=${board.replyList},boardNo=${board.boardNo}">			
 		</section>
 	</main>
