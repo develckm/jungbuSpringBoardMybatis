@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<form  action="/reply/update.do" method="post" enctype="multipart/form-data">
+	<form action="/reply/update.do" method="post" enctype="multipart/form-data">
 		<h5>댓글 수정 (<span th:text="${reply.userId}"></span>)</h5>
 		<input type="hidden" name="boardNo" th:value="${reply.boardNo}"> 
 		<input type="hidden" name="replyNo" th:value="${reply.replyNo}"> 
+		<input type="hidden" name="userId" th:value="${reply.userId}"> 		
 		<input type="hidden" name="imgPath" th:value="${reply.imgPath}"> 
 		<p class="input-group">
 			<label class="input-group-text" for="replyTitle">제목</label>
@@ -23,9 +24,16 @@
 			</p>
 		</div>
 		<div class="d-flex justify-content-end">
-			<button class="btn btn-outline-primary me-2">수정</button>
-			<a class="btn btn-outline-danger" 
-				th:href="@{/reply/delete.do(replyNo=${reply.replyNo})}">삭제</a>
+			<button
+			onclick="updateReply(this.form)" 
+			type="button" class="btn btn-outline-primary me-2">
+				수정
+			</button>
+			<button 
+			th:onclick="deleteReply([[${reply.replyNo}]],[[${reply.boardNo}]])"
+			type="button" class="btn btn-outline-danger">
+				삭제
+			</button>
 		</div>
 	</form>
 

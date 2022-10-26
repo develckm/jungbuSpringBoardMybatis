@@ -3,10 +3,13 @@ package com.jungbu.mybatis_board.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+
+import com.github.pagehelper.Page;
 import com.jungbu.mybatis_board.dto.BoardDto;
 //com.jungbu.mybatis_board.mapper.BoardMapper
 @Mapper
 public interface BoardMapper {
+	
 	List<BoardDto> list(int startRow,int rows);
 	int listCount();
 	BoardDto detail(int boardNo);

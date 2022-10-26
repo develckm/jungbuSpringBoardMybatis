@@ -37,7 +37,8 @@ public class ReplyController {
 	ReplyMapper replyMapper;
 	@Data
 	class CheckStatus{
-		private int status;//{status : 0:등록실패,1:성공,-1:로그인하세요}
+		private int status;
+		//{status : 0:등록실패, 1:성공, -1:로그인하세요,-2: 글쓴이만 수정가능}
 	}
 	@PostMapping("/insert.do")
 	public @ResponseBody CheckStatus insert(
@@ -92,11 +93,15 @@ public class ReplyController {
 	
 	
 	@GetMapping("/delete.do")
-	public String delete(
+	public @ResponseBody CheckStatus delete(
 			@RequestParam(required=true) int replyNo,
-			@SessionAttribute UserDto loginUser,
-			HttpSession session
+			@SessionAttribute(required=false) UserDto loginUser
 			) {
+		CheckStatus checkStatus=new CheckStatus();
+		if(loginUser==null) {
+			checkStatus.setStatus(-1);
+			return checkStatus;
+		}
 		ReplyDto reply=null;
 		int delete=0;
 		try {
@@ -107,21 +112,30 @@ public class ReplyController {
 					File imgFile=new File(imgPath+"/"+reply.getImgPath());
 					System.out.println("이미지 파일 삭제:"+imgFile.delete());
 				}
+			}else{
+				checkStatus.setStatus(-2);
+				return checkStatus;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String msg=(delete>0)?"삭제 성공":"삭제 실패";
-		session.setAttribute("msg", msg);
-		return "redirect:/board/detail.do?boardNo="+reply.getBoardNo();
+		checkStatus.setStatus(delete);
+		return checkStatus;
 	}
 	@PostMapping("/update.do")
-	public String update(
+	public @ResponseBody CheckStatus update(
 			ReplyDto reply,
-			@SessionAttribute UserDto loginUser,
-			HttpSession session,
+			@SessionAttribute(required=false) UserDto loginUser,
 			MultipartFile img
 			) {
+		CheckStatus checkStatus=new CheckStatus();
+		if(loginUser==null) {
+			checkStatus.setStatus(-1);
+			return checkStatus;
+		}else if(!loginUser.getUserId().equals(reply.getUserId())) {
+			checkStatus.setStatus(-2);
+			return checkStatus;
+		}
 		int update=0;
 		try {
 			if(img!=null&& !img.isEmpty()) {
@@ -138,13 +152,11 @@ public class ReplyController {
 				}
 			}
 			update=replyMapper.update(reply);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String msg=(update>0)?"수정 성공":"수정 실패";
-		session.setAttribute("msg", msg);
-		return "redirect:/board/detail.do?boardNo="+reply.getBoardNo();
+		checkStatus.setStatus(update);
+		return checkStatus;
 	}
 	@GetMapping("/{boardNo}/list.do")
 	public String list(
