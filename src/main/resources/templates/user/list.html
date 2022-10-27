@@ -18,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
-				<tr th:each="user : ${userList}">
+				<tr th:each="user : ${paging.list}">
 					<td>
 						<a 
 						th:href="@{/user/detail.do(userId=${user.userId})}" 
@@ -30,22 +30,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<nav>
-		  <ul class="pagination justify-content-center">
-		    <li class="page-item disabled">
-		      <a class="page-link">Previous</a>
-		    </li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=1)}">1</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=2)}">2</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=3)}">3</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=4)}">4</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=5)}">5</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=6)}">6</a></li>
-		    <li class="page-item">
-		      <a class="page-link" href="#">Next</a>
-		    </li>
-		  </ul>
-		</nav>
+		<nav th:include="/user/pageNav"></nav>
 		
 	</main>
 

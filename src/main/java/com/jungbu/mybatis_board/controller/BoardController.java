@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fasterxml.jackson.core.io.UTF32Reader;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.BoardDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.BoardMapper;
@@ -27,15 +30,19 @@ public class BoardController {
 			Model model,
 			@RequestParam(defaultValue="1")int page
 			) {
-		final int ROWS=10;
-		int starRow=(page-1)*ROWS;
-		List<BoardDto> boardList=null;
+		final int ROWS=5;
+		Page<BoardDto> boardList=null;
+		PageInfo<BoardDto> paging=null; //네비게이션이 포함된 페이징 정보
 		try {
-			boardList=boardMapper.list(starRow, ROWS);			
+			//list 쿼리를 실행하기 전에 PageHelper.startPage만 호출하면 자동으로 Paging과 count 쿼리를 실행 
+			PageHelper.startPage(page, ROWS,"board_no DESC");
+			boardList=boardMapper.list();
+			paging=PageInfo.of(boardList,5);
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		model.addAttribute("boardList", boardList);
+		model.addAttribute("paging", paging);
 		return "/board/list";
 	}
 	@GetMapping("/detail.do")

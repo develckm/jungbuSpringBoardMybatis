@@ -9,8 +9,8 @@ import com.jungbu.mybatis_board.dto.BoardDto;
 //com.jungbu.mybatis_board.mapper.BoardMapper
 @Mapper
 public interface BoardMapper {
-	
-	List<BoardDto> list(int startRow,int rows);
+	//Page=ArrayList+Page정보
+	Page<BoardDto> list();
 	int listCount();
 	BoardDto detail(int boardNo);
 	BoardDto detailReplyPaging(int boardNo, int startRow, int rows);

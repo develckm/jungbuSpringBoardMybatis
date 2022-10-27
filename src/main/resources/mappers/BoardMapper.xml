@@ -28,8 +28,6 @@
 	
 	<select id="list" resultMap="BoardMap">
 		SELECT * FROM BOARD 
-			ORDER BY board_no DESC
-			LIMIT #{startRow},#{rows}
 	</select>
 	<select id="listCount" resultType="int">
 		SELECT COUNT(*) FROM BOARD

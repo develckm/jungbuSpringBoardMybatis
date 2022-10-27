@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.UserMapper;
 
@@ -82,9 +84,10 @@ public class UserController {
 			@RequestParam(defaultValue="1") int page
 			) {
 		final int ROWS=10;
-		int startRow=(page-1)*ROWS;
-		List<UserDto> userList=userMapper.list(startRow,ROWS);
-		model.addAttribute("userList", userList);
+		PageHelper.startPage(page, ROWS, "user_id DESC");
+		List<UserDto> userList=userMapper.list();
+		PageInfo<UserDto> paging=PageInfo.of(userList,5);
+		model.addAttribute("paging", paging);
 		return "/user/list";
 	}
 //	@GetMapping("/detail.do")

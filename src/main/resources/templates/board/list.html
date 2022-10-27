@@ -26,8 +26,8 @@
 			</thead>
 			<tbody>
 				<tr class="link-secondary"
-					th:onclick="location.href='detail.do?boardNo=[[${board.boardNo}]]'" 
-					th:each="board:${boardList}">
+					th:each="board:${paging.list}"
+					th:onclick="location.href='detail.do?boardNo=[[${board.boardNo}]]'">
 					<td th:text="${board.boardNo}"></td>
 					<td th:text="${board.title}"></td>
 					<td th:text="${#dates.format(board.postTime,'MM월dd일 HH시mm분')}"></td>
@@ -36,23 +36,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<nav>
-		  <ul class="pagination justify-content-center">
-		    <li class="page-item disabled">
-		      <a class="page-link">Previous</a>
-		    </li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=1)}">1</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=2)}">2</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=3)}">3</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=4)}">4</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=5)}">5</a></li>
-		    <li class="page-item"><a class="page-link" th:href="@{''(page=6)}">6</a></li>
-		    <li class="page-item">
-		      <a class="page-link" href="#">Next</a>
-		    </li>
-		  </ul>
-		</nav>
-		
+		<nav th:include="/board/pageNav"></nav>
 	</main>		
 </body>
 </html>
