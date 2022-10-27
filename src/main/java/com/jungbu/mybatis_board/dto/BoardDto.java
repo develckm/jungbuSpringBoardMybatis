@@ -6,6 +6,8 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 /*
 +-----------+--------------+------+-----+-------------------+-------------------+
 | Field     | Type         | Null | Key | Default           | Extra             |
@@ -23,11 +25,13 @@ public class BoardDto {
 	private String title;    
 	private String contents; 
 	private java.util.Date postTime;
-	private String userId;  
+	private String userId; 
+	private UserDto user;
 	private int views;    
 	private int likes;//select count(*) from board_prefer weher prefer=1 AND board_no=no     
 	private int bads; //select count(*) from board_prefer weher prefer=0 AND board_no=no     
 	private PageInfo<ReplyDto> replyList; //board : reply = 1 : N
+	private List<BoardImgDto> boardImgList;
 }
 
 

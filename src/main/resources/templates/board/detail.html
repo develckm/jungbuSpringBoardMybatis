@@ -42,6 +42,9 @@
 				</button>
 				
 			</p>
+			<p  id="imgContainer">
+				<img class="img-fluid" style="max-height: 200px;" th:each="boardImg:${board.boardImgList}" alt="" 
+				th:src="@{/img/{file}(file=${boardImg.imgPath})}">				
 			<p>
 				<strong>내용 : </strong>
 				<span th:text="${board.contents}"></span>

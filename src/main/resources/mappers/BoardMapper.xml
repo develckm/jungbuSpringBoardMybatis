@@ -13,6 +13,9 @@
 		<result column="views" property="views"/>
 		<result column="likes" property="likes"/>
 		<result column="bads" property="bads"/>
+		<association property="user" column="user_id"
+		select="com.jungbu.mybatis_board.mapper.UserMapper.detail"
+		 fetchType="lazy"></association>
 		<collection property="replyList" ofType="ReplyDto">
 			<id column="reply_no" property="replyNo"/>
 			<result column="r_title" property="title"/>
@@ -23,7 +26,9 @@
 			<result column="r_likes" property="likes"/>
 			<result column="r_bads" property="bads"/>
 		</collection>
-		
+		<collection property="boardImgList" column="board_no" fetchType="lazy"
+		select="com.jungbu.mybatis_board.mapper.BoardImgMapper.list" >
+		</collection>
 	</resultMap>
 	
 	<select id="list" resultMap="BoardMap">
@@ -49,7 +54,6 @@
 			r.img_path r_img_path,
 			(SELECT COUNT(*) FROM REPLY_PREFER rf WHERE rf.reply_no=r.reply_no AND prefer=1) r_likes,
 			(SELECT COUNT(*) FROM REPLY_PREFER rf WHERE rf.reply_no=r.reply_no AND prefer=0) r_bads,
-			
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
 			FROM BOARD b 
