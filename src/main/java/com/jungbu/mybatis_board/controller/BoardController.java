@@ -1,10 +1,15 @@
 package com.jungbu.mybatis_board.controller;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.io.UTF32Reader;
 import com.github.pagehelper.Page;
@@ -29,6 +35,8 @@ public class BoardController {
 	BoardMapper boardMapper;
 	@Autowired
 	BoardService boardService;
+	@Value("${spring.servlet.multipart.location}")
+	String imgSavePath;
 	
 	@GetMapping("/list.do")
 	public String list(
@@ -178,13 +186,26 @@ public class BoardController {
 	public String insert(
 			BoardDto board,
 			@SessionAttribute(required = false) UserDto loginUser,
-			HttpSession session
+			HttpSession session,
+			@RequestParam(name="img") MultipartFile [] imgs
 			) {
 		int insert=0;
 		String msg="";
+		ArrayList<String> imgPaths= new ArrayList<String>(); //db에 저장할 이름
 		try {
+			for(MultipartFile img: imgs) {
+				if(!img.isEmpty()) {
+					String [] contentTypes=img.getContentType().split("/");
+					if(contentTypes[0].equals("image")) {
+						String fileName="board_"+System.currentTimeMillis()+"_"+((int)(Math.random()*10000))+"."+contentTypes[1];
+						Path path=Paths.get(imgSavePath+"/"+fileName);
+						img.transferTo(path);
+						imgPaths.add(fileName);
+					}
+				}
+			}
 			if(loginUser!=null) {
-				insert=boardMapper.insert(board);				
+				insert=boardService.registBoardAndBoardImgs(board, imgPaths);		
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

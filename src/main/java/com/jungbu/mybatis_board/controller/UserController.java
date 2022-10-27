@@ -83,12 +83,13 @@ public class UserController {
 			Model model,
 			@RequestParam(defaultValue="1") int page
 			) {
+		System.out.println("/user/list.do 컨트롤러 호출");
 		final int ROWS=10;
 		PageHelper.startPage(page, ROWS, "user_id DESC");
 		List<UserDto> userList=userMapper.list();
 		PageInfo<UserDto> paging=PageInfo.of(userList,5);
 		model.addAttribute("paging", paging);
-		return "/user/list";
+		return "/user/list2";
 	}
 //	@GetMapping("/detail.do")
 //	public ModelAndView detail(ModelAndView modelAndView,String userId) {
@@ -112,7 +113,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 		if(update>0) {
-			return "redirect:/user/list.do";
+			return "redirect:/user/list2.do";
 		}else {
 			return "redirect:/user/detail.do?userId="+user.getUserId();
 		}
@@ -126,7 +127,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 		if(delete>0) {
-			return "redirect:/user/list.do";
+			return "redirect:/user/list2.do";
 		}else {
 			return "redirect:/user/detail.do?userId="+userId;
 		}
@@ -142,7 +143,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 		if(insert>0) {
-			return "redirect:/user/list.do";
+			return "redirect:/user/list2.do";
 		}else {
 			return "redirect:/user/insert.do";
 		}

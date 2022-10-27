@@ -18,7 +18,7 @@
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
-				<tr th:each="user : ${userList}">
+				<tr th:each="user : ${paging.list}">
 					<td>
 						<a 
 						th:href="@{/user/detail.do(userId=${user.userId})}" 
@@ -29,7 +29,9 @@
 					<td th:text="${user.phone}"></td>
 				</tr>
 			</tbody>
-		</table>		
+		</table>
+		<nav th:include="/user/pageNav"></nav>
+		
 	</main>
 
 </body>
