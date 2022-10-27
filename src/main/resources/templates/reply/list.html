@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="list-group">
-	<th:block th:each="reply:${replyList}">
+	<th:block th:each="reply:${paging.list}">
   	<div th:id="'replyLi'+${reply.replyNo}" class="list-group-item list-group-item-action py-3" aria-current="true">
 	    <div class="d-flex w-100 justify-content-between">
 	      <h5 class="mb-1" th:text="${reply.title}"></h5>
@@ -31,40 +31,7 @@
 	    </div>
  	</div>
 	 </th:block>
- 	<nav class="my-5">
-	  <ul class="pagination justify-content-center">
-	    <li class="page-item disabled">
-	      <a class="page-link">Previous</a>
-	    </li>
-	    <li class="page-item">
-	    	<a class="page-link" href="javascript:void(0)" 
-	    	th:onclick="readReplyList([[${boardNo}]],1)">
-	    		1
-	    	</a>
-	    </li>
-	    <li class="page-item">
-	    	<a class="page-link" href="javascript:void(0)" 
-	    	th:onclick="readReplyList([[${boardNo}]],2)">
-	    		2
-	    	</a>
-	    </li>
-	    <li class="page-item">
-	    	<a class="page-link" href="javascript:void(0)" 
-	    	th:onclick="readReplyList([[${boardNo}]],3)">
-	    		3
-	    	</a>
-	    </li>
-	    <li class="page-item">
-	    	<a class="page-link" href="javascript:void(0)" 
-	    	th:onclick="readReplyList([[${boardNo}]],4)">
-	    		4
-	    	</a>
-	    </li>
-	    <li class="page-item">
-	      <a class="page-link" href="#">Next</a>
-	    </li>
-	  </ul>
-	</nav>
+ 	<nav class="my-5" th:include="/reply/pageNav"></nav>
  
 	 
 	 

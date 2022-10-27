@@ -82,7 +82,7 @@
 			</div>
 		</form>
 		<section id="replyList" class="mt-3 collapse show">
-			<th:block th:include="/reply/list" th:with="replyList=${board.replyList},boardNo=${board.boardNo}">			
+			<th:block th:include="/reply/list" th:with="paging=${board.replyList},boardNo=${board.boardNo}">			
 		</section>
 	</main>
 </body>

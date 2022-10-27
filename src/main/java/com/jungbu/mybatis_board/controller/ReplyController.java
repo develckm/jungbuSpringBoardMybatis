@@ -22,9 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.ReplyDto;
+import com.jungbu.mybatis_board.dto.SearchDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.ReplyMapper;
+import com.jungbu.mybatis_board.service.ReplyService;
 
 import lombok.Data;
 
@@ -35,6 +38,8 @@ public class ReplyController {
 	String imgPath;
 	@Autowired
 	ReplyMapper replyMapper;
+	@Autowired
+	ReplyService replyService;
 	@Data
 	class CheckStatus{
 		private int status;
@@ -160,16 +165,15 @@ public class ReplyController {
 	}
 	@GetMapping("/{boardNo}/list.do")
 	public String list(
-			@RequestParam(defaultValue="1") int page,
+			SearchDto search,
 			@PathVariable int boardNo,
 			Model model
 			) {
 		List<ReplyDto> replyList=null;
 		int ROWS=5;
-		int startRow=(page-1)*ROWS;
-		
-		replyList=replyMapper.list(boardNo,startRow, ROWS);
-		model.addAttribute("replyList",replyList);
+		if(search.getOrderBy()==null)search.setOrderBy("reply_no DESC");
+		PageInfo<ReplyDto> paging=replyService.readReplysPaging(boardNo, search);
+		model.addAttribute("paging",paging);
 		return "/reply/list";
 	}
 	

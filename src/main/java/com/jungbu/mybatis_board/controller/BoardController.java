@@ -18,27 +18,31 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jungbu.mybatis_board.dto.BoardDto;
+import com.jungbu.mybatis_board.dto.SearchDto;
 import com.jungbu.mybatis_board.dto.UserDto;
 import com.jungbu.mybatis_board.mapper.BoardMapper;
+import com.jungbu.mybatis_board.service.BoardService;
 @RequestMapping("/board")
 @Controller
 public class BoardController {
 	@Autowired
 	BoardMapper boardMapper;
+	@Autowired
+	BoardService boardService;
+	
 	@GetMapping("/list.do")
 	public String list(
 			Model model,
-			@RequestParam(defaultValue="1")int page
+			SearchDto search
 			) {
 		final int ROWS=5;
-		Page<BoardDto> boardList=null;
 		PageInfo<BoardDto> paging=null; //네비게이션이 포함된 페이징 정보
 		try {
 			//list 쿼리를 실행하기 전에 PageHelper.startPage만 호출하면 자동으로 Paging과 count 쿼리를 실행 
-			PageHelper.startPage(page, ROWS,"board_no DESC");
-			boardList=boardMapper.list();
-			paging=PageInfo.of(boardList,5);
-		
+			if(search.getOrderBy()==null)
+				search.setOrderBy("board_no DESC");
+			
+			paging=boardService.readBoardPaging(search);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,13 +53,12 @@ public class BoardController {
 	public String detail(
 			@RequestParam(required=true)int boardNo,
 			Model model,
-			@RequestParam(defaultValue="1") int page
+			SearchDto search
 			){
 		BoardDto board=null;
-		final int ROWS=5;
-		int startRow=(page-1)*ROWS;
 		try {
-			board=boardMapper.detailReplyPaging(boardNo,startRow,ROWS);
+			//PageHeler는 1:N join된 replyList를 페이징 할 수 없다! (join x)
+			board=boardService.readBoardWithReplysPaging(boardNo, search);
 			System.out.println(board);
 			boardMapper.viewUpdate(boardNo);
 		} catch (Exception e) {

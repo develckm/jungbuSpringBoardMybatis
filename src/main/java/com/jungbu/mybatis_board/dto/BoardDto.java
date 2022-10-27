@@ -3,6 +3,8 @@ package com.jungbu.mybatis_board.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+
 import lombok.Data;
 /*
 +-----------+--------------+------+-----+-------------------+-------------------+
@@ -25,7 +27,7 @@ public class BoardDto {
 	private int views;    
 	private int likes;//select count(*) from board_prefer weher prefer=1 AND board_no=no     
 	private int bads; //select count(*) from board_prefer weher prefer=0 AND board_no=no     
-	private List<ReplyDto> replyList; //board : reply = 1 : N
+	private PageInfo<ReplyDto> replyList; //board : reply = 1 : N
 }
 
 

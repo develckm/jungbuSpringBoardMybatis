@@ -37,7 +37,6 @@
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
 			FROM BOARD b 
-			LEFT JOIN REPLY r USING(board_no) 
 			WHERE board_no=#{boardNo}
 	</select>
 	<select id="detailReplyPaging" resultMap="BoardMap">
