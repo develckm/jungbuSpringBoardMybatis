@@ -21,12 +21,11 @@
 			</collection>
 		</collection>
 	</resultMap>
-	
 	<insert id="insert" parameterType="ReplyDto">
 		INSERT INTO REPLY 
-		(board_no,user_id,title,contents,img_path)
+		(board_no,user_id,title,contents,img_path,fk_reply_no)
 		VALUES
-		(#{boardNo},#{userId},#{title},#{contents},#{imgPath})
+		(#{boardNo},#{userId},#{title},#{contents},#{imgPath},#{fkReplyNo})
 	</insert>
 	<update id="update" parameterType="ReplyDto">
 		UPDATE REPLY SET
@@ -47,8 +46,4 @@
 		SELECT * FROM REPLY
 			WHERE fk_reply_no=${replyNo}
 	</select>
-	
-	
-	
-	
 </mapper>
