@@ -13,6 +13,13 @@
 		<result column="user_id" property="userId"/>
 		<result column="likes" property="likes"/>
 		<result column="bads" property="bads"/>
+		<result column="fk_reply_no" property="fkReplyNo"/>
+		<collection property="replyList" column="reply_no"
+			select="selfJoinList" fetchType="lazy">
+			<collection property="replyList" column="reply_no"
+			select="selfJoinList" fetchType="lazy">
+			</collection>
+		</collection>
 	</resultMap>
 	
 	<insert id="insert" parameterType="ReplyDto">
@@ -33,7 +40,15 @@
 		SELECT * FROM REPLY WHERE reply_no=#{replyNo}
 	</select>
 	<select id="list" resultMap="ReplyMap">
-		SELECT * FROM REPLY
-			WHERE board_no=#{boardNo}
+		SELECT * FROM REPLY 
+			WHERE board_no=#{boardNo} AND fk_reply_no IS NULL
 	</select>
+	<select id="selfJoinList" resultMap="ReplyMap">
+		SELECT * FROM REPLY
+			WHERE fk_reply_no=${replyNo}
+	</select>
+	
+	
+	
+	
 </mapper>
