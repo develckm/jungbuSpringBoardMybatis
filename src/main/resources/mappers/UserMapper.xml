@@ -6,6 +6,7 @@
  	<select id="list" resultType="com.jungbu.mybatis_board.dto.UserDto" >
  		SELECT *,user_id userId FROM USER 
  	</select>
+ 	
  	<select id="detail" resultType="com.jungbu.mybatis_board.dto.UserDto" >
  		SELECT *,user_id userId from USER
  		WHERE user_id=#{userId}

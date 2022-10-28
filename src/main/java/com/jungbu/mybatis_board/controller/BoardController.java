@@ -49,7 +49,6 @@ public class BoardController {
 			//list 쿼리를 실행하기 전에 PageHelper.startPage만 호출하면 자동으로 Paging과 count 쿼리를 실행 
 			if(search.getOrderBy()==null)
 				search.setOrderBy("board_no DESC");
-			
 			paging=boardService.readBoardPaging(search);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,7 +66,6 @@ public class BoardController {
 		try {
 			//PageHeler는 1:N join된 replyList를 페이징 할 수 없다! (join x)
 			board=boardService.readBoardWithReplysPaging(boardNo, search);
-			System.out.println(board);
 			boardMapper.viewUpdate(boardNo);
 		} catch (Exception e) {
 			e.printStackTrace();

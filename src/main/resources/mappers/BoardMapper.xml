@@ -13,6 +13,9 @@
 		<result column="views" property="views"/>
 		<result column="likes" property="likes"/>
 		<result column="bads" property="bads"/>
+		<association property="user" column="user_id" fetchType="lazy"
+		select="com.jungbu.mybatis_board.mapper.UserMapper.detail"></association>
+		
 		<collection property="replyList" ofType="ReplyDto">
 			<id column="reply_no" property="replyNo"/>
 			<result column="r_title" property="title"/>
@@ -23,7 +26,13 @@
 			<result column="r_likes" property="likes"/>
 			<result column="r_bads" property="bads"/>
 		</collection>
-		
+		<!-- collection.select : board 출력할때 select를 한번 더 호출(==join) -->
+		<!-- fetchType="lazy"(게으른 연산) : toString,equals,get... 
+								호출이 없으면 collection.select를 하지 않는다. -->
+		<collection property="boardImgList"
+			select="com.jungbu.mybatis_board.mapper.BoardImgMapper.list"
+			column="board_no" fetchType="lazy">
+		</collection>
 	</resultMap>
 	
 	<select id="list" resultMap="BoardMap">
@@ -36,7 +45,7 @@
 		SELECT b.*,			
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=1) likes,
 			(SELECT COUNT(*) FROM BOARD_PREFER f WHERE f.board_no=b.board_no AND prefer=0) bads
-			FROM BOARD b 
+			FROM BOARD b
 			WHERE board_no=#{boardNo}
 	</select>
 	<select id="detailReplyPaging" resultMap="BoardMap">

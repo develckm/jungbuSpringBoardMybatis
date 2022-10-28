@@ -23,11 +23,21 @@ public class BoardDto {
 	private String title;    
 	private String contents; 
 	private java.util.Date postTime;
-	private String userId;  
+	private String userId; 
+	private UserDto user; //FK:user_id //board : user = 1 : N
 	private int views;    
 	private int likes;//select count(*) from board_prefer weher prefer=1 AND board_no=no     
 	private int bads; //select count(*) from board_prefer weher prefer=0 AND board_no=no     
 	private PageInfo<ReplyDto> replyList; //board : reply = 1 : N
+	private List<BoardImgDto> boardImgList;//board : boardImg = 1 : N
 }
+
+
+
+
+
+
+
+
 
 

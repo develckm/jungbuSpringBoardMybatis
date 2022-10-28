@@ -16,7 +16,7 @@
 			</p>
 			<p>
 				<strong>글쓴이 : </strong>
-				<span th:text="${board.userId}"></span>
+				<span th:text="${board.userId+' / '+board.user.name+' / '+board.user.email}"></span>
 			</p>
 			<p>
 				<strong>제목 : </strong>
@@ -42,6 +42,11 @@
 				</button>
 				
 			</p>
+			<div>
+				<img th:each="boardImg:${board.boardImgList}"
+				style="max-width: 100px" alt="" 
+				th:src="@{/img/{file}(file=${boardImg.imgPath})}">
+			</div>
 			<p>
 				<strong>내용 : </strong>
 				<span th:text="${board.contents}"></span>
